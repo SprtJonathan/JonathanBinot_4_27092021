@@ -38,8 +38,8 @@ async function verifyForm() {
   let fnameId = document.getElementById("first");
   let lnameId = document.getElementById("last");
   let emailId = document.getElementById("email");
-  let birthdateId = document.getElementById("birthdate");
-  let goNumberId = document.getElementById("number");
+  let goNumberId = document.querySelector('input[name="quantity"]');
+  let locationRadioId = document.querySelector('input[name="location"]:checked');
 
   // Vérification des caractères via des regex
   let verifyLetters = /[A-Za-z]/; // Vérification des lettres uniquement
@@ -61,6 +61,9 @@ async function verifyForm() {
   let lname = lnameId.value;
   let email = emailId.value;
   let goNumber = goNumberId.value;
+  let locationRadio = locationRadioId.value;
+
+  console.log(locationRadio);
 
   // Vérification de la validité des différents inputs
   // Nom de famille
@@ -90,54 +93,31 @@ async function verifyForm() {
     formErrorHTML + badValueEmail + badValueChar
   );
 
-  // Adresse
-  let addressCheck = checkFormInput(
-    verifyCharacters.test(address),
-    true,
-    address,
-    addressId,
-    formErrorHTML + badValue + badValueChar
+  // Nombre de tournois Game ON
+  let goNumberCheck = checkFormInput(
+    verifyLetters.test(goNumber),
+    false,
+    goNumber,
+    goNumberId,
+    formErrorHTML + badValue + badValueLetter
   );
 
-  // Complément d'adresse
-  let address2Check = checkFormInput(
-    verifyCharacters.test(address),
-    true,
-    address2,
-    address2Id,
-    formErrorHTML + badValue + badValueChar
+  // Nombre de tournois Game ON
+  let locationRadioCheck = checkFormInput(
+    verifyLetters.test(goNumber),
+    false,
+    goNumber,
+    goNumberId,
+    formErrorHTML + badValue + badValueLetter
   );
 
-  // Ville
-  let cityCheck = checkFormInput(
-    verifyNumbers.test(city) | verifyCharacters.test(city),
-    true,
-    city,
-    cityId,
-    formErrorHTML + badValue + badValueFigure + badValueChar
-  );
-
-  // Code postal
-  let zipcodeCheck = checkFormInput(
-    verifyCharacters.test(zipcode) | verifyLetters.test(zipcode),
-    true,
-    zipcode,
-    zipcodeId,
-    formErrorHTML + badValue + badValueLetter + badValueChar
-  );
+  console.log(locationRadio);
 
   // Variable comptant le nombre d'erreurs
-  let errorCount =
-    lnameCheck +
-    fnameCheck +
-    emailCheck +
-    addressCheck +
-    address2Check +
-    cityCheck +
-    zipcodeCheck;
+  let errorCount = lnameCheck + fnameCheck + emailCheck + goNumberCheck;
 
   if (errorCount != 0) {
-    shoppingForm.insertAdjacentHTML(
+    modalBtn.insertAdjacentHTML(
       "afterend",
       formErrorHTML +
         "Erreur: Des erreurs sont présentes dans le formulaire, veuillez les corriger" +
@@ -152,6 +132,7 @@ async function verifyForm() {
       lastName: lname,
       email: email,
       goNumber: goNumber,
+      locationRadio: locationRadio,
     };
     console.log("formulaire validé");
     formBoolean = true; // Si aucune erreur n'est retournée alors on définit la variable comme vraie pour que le formulaire ne puisse pas être envoyé
@@ -161,14 +142,15 @@ async function verifyForm() {
 // Bouton d'achat
 let formSubmit = document.getElementById("btn-signup-submit");
 
+let user;
+
 // Fonciton éxecutée lorsque le bouton acheté est cliqué
-formSubmit.addEventListener("submit", (event) => {
+formSubmit.addEventListener("click", (event) => {
   event.preventDefault();
   verifyForm(user); // Vérification du formulaire avant l'envoi
-  console.log(user);
   if (formBoolean == true) {
     // Vérification de la variable booléenne définie précédemment
-    shoppingForm.insertAdjacentHTML(
+    modalBtn.insertAdjacentHTML(
       "afterend",
       "<div id='form-alert'><div class='alert alert-primary'><strong>" +
         "Formulaire valide" +
