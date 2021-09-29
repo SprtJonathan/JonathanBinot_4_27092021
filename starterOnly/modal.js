@@ -39,7 +39,10 @@ async function verifyForm() {
   let lnameId = document.getElementById("last");
   let emailId = document.getElementById("email");
   let goNumberId = document.querySelector('input[name="quantity"]');
-  let locationRadioId = document.querySelector('input[name="location"]:checked');
+  let locationRadioId = document.querySelector(
+    'input[name="location"]:checked'
+  );
+  goNumberId.attributes["required"] = "";
 
   // Vérification des caractères via des regex
   let verifyLetters = /[A-Za-z]/; // Vérification des lettres uniquement
@@ -61,9 +64,26 @@ async function verifyForm() {
   let lname = lnameId.value;
   let email = emailId.value;
   let goNumber = goNumberId.value;
-  let locationRadio = locationRadioId.value;
+  let locationRadio = null;
 
-  console.log(locationRadio);
+  // Si le nombre de game on est > 0 alors on rend le choix de ville obligatoire
+  if (goNumber > 0) {
+    if (locationRadioId != null) {
+      locationRadio = locationRadioId.value;
+      console.log(locationRadio);
+    } else {
+      console.log("localisation vide");
+      document
+        .getElementById("localisation")
+        .insertAdjacentHTML(
+          "afterend",
+          formErrorHTML +
+            "Erreur: Merci de sélectionner une localisation" +
+            "<br>" +
+            "</strong></div></div>"
+        );
+    }
+  }
 
   // Vérification de la validité des différents inputs
   // Nom de famille
@@ -96,44 +116,51 @@ async function verifyForm() {
   // Nombre de tournois Game ON
   let goNumberCheck = checkFormInput(
     verifyLetters.test(goNumber),
-    false,
+    true,
     goNumber,
     goNumberId,
     formErrorHTML + badValue + badValueLetter
   );
 
-  // Nombre de tournois Game ON
-  let locationRadioCheck = checkFormInput(
-    verifyLetters.test(goNumber),
-    false,
-    goNumber,
-    goNumberId,
-    formErrorHTML + badValue + badValueLetter
-  );
-
-  console.log(locationRadio);
+  console.log(goNumberCheck)
 
   // Variable comptant le nombre d'erreurs
   let errorCount = lnameCheck + fnameCheck + emailCheck + goNumberCheck;
 
+  // Si la valeur de goNumber est supérieure à 0 mais qu'aucune localisation n'est choisie, alors on renvoie une erreur
+  if (goNumber > 0 && locationRadio == null) {
+    errorCount += 1;
+  }
+
+  console.log("valeur de ErrorCount = " + errorCount);
+
   if (errorCount != 0) {
-    modalBtn.insertAdjacentHTML(
+    /*modalBtn.insertAdjacentHTML(
       "afterend",
       formErrorHTML +
         "Erreur: Des erreurs sont présentes dans le formulaire, veuillez les corriger" +
         "<br>" +
         "</strong></div></div>"
-    );
+    );*/
     formBoolean = false; // Si des erreurs sont retournées alors on définit la variable comme fausse pour que le formulaire ne puisse pas être envoyé
   } else {
     // Construction de l'objet contenant les infos du client
-    user = {
-      firstName: fname,
-      lastName: lname,
-      email: email,
-      goNumber: goNumber,
-      locationRadio: locationRadio,
-    };
+    if (goNumber > 0) {
+      user = {
+        firstName: fname,
+        lastName: lname,
+        email: email,
+        goNumber: goNumber,
+        locationRadio: locationRadio,
+      };
+    } else {
+      user = {
+        firstName: fname,
+        lastName: lname,
+        email: email,
+        goNumber: goNumber,
+      };
+    }
     console.log("formulaire validé");
     formBoolean = true; // Si aucune erreur n'est retournée alors on définit la variable comme vraie pour que le formulaire ne puisse pas être envoyé
   }
@@ -148,6 +175,7 @@ let user;
 formSubmit.addEventListener("click", (event) => {
   event.preventDefault();
   verifyForm(user); // Vérification du formulaire avant l'envoi
+  console.log(user);
   if (formBoolean == true) {
     // Vérification de la variable booléenne définie précédemment
     modalBtn.insertAdjacentHTML(
