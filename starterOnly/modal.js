@@ -52,12 +52,13 @@ async function verifyForm() {
   let verifyCharacters = /[*?":{}|<>]/; // Vérification des caractères spéciaux
 
   // Création de variables pour l'affichage des erreurs
-  let formErrorHTML = "<div id='form-alert'><div class='alert-danger'><strong>";
+  let formErrorHTML =
+    "<div id='form-alert'class='alert-block'><div class='alert-danger'><strong class='alert-text'>";
   let badValue = "Format incorrect:";
   let badValueLetter = " - Lettres interdites";
   let badValueFigure = " - Chiffres interdits";
   let badValueChar = " - Caractères spéciaux interdits";
-  let badValueEmail = " Format d'email non autorisé:";
+  let badValueEmail = " Format d'email incorrect:";
 
   // Récupération des inputs
   let fname = fnameId.value;
@@ -86,43 +87,80 @@ async function verifyForm() {
   }
 
   // Vérification de la validité des différents inputs
+  // Prénom
+  let fnameCheck = checkIfEmpty(
+    fname,
+    fnameId,
+    verifyNumbers.test(fname) | verifyCharacters.test(fname),
+    badValue + badValueFigure + badValueChar
+  );
+
+  console.log(fnameCheck + "fnamecheck");
+
+  /*if (verifyEmpty.test(fname) == false) {
+    fnameCheck = checkFormInput(
+      verifyNumbers.test(fname) | verifyCharacters.test(fname),
+      true,
+      fname,
+      fnameId,
+      formErrorHTML + badValue + badValueFigure + badValueChar
+    );
+  } else {
+    fnameCheck = emptyFormInput(fnameId)
+  }*/
+
   // Nom de famille
-  let lnameCheck = checkFormInput(
+  let lnameCheck = checkIfEmpty(
+    lname,
+    lnameId,
     verifyNumbers.test(lname) | verifyCharacters.test(lname),
+    badValue + badValueFigure + badValueChar
+  );
+
+  /*let lnameCheck = checkFormInput(
+    verifyNumbers.test(lname) |
+      verifyCharacters.test(lname) |
+      verifyEmpty.test(lname),
     true,
     lname,
     lnameId,
     formErrorHTML + badValue + badValueFigure + badValueChar
-  );
-
-  // Prénom
-  let fnameCheck = checkFormInput(
-    verifyNumbers.test(fname) | verifyCharacters.test(fname),
-    true,
-    fname,
-    fnameId,
-    formErrorHTML + badValue + badValueFigure + badValueChar
-  );
+  );*/
 
   // Email
-  let emailCheck = checkFormInput(
+  let emailCheck = checkEmailFormat(
+    email,
+    emailId,
+    verifyEmail.test(email),
+    badValueEmail
+  );
+
+  console.log("retour du check email : " + emailCheck);
+
+  /*let emailCheck = checkFormInput(
     verifyEmail.test(email),
     false,
     email,
     emailId,
     formErrorHTML + badValueEmail + badValueChar
-  );
+  );*/
 
   // Nombre de tournois Game ON
-  let goNumberCheck = checkFormInput(
+  let goNumberCheck = checkIfEmpty(
+    goNumber,
+    goNumberId,
+    verifyNumbers.test(goNumber) | verifyCharacters.test(goNumber),
+    badValueLetter
+  );
+  /*let goNumberCheck = checkFormInput(
     verifyLetters.test(goNumber),
     true,
     goNumber,
     goNumberId,
     formErrorHTML + badValue + badValueLetter
-  );
+  );*/
 
-  console.log(goNumberCheck)
+  console.log(goNumberCheck);
 
   // Variable comptant le nombre d'erreurs
   let errorCount = lnameCheck + fnameCheck + emailCheck + goNumberCheck;
@@ -135,13 +173,15 @@ async function verifyForm() {
   console.log("valeur de ErrorCount = " + errorCount);
 
   if (errorCount != 0) {
-    /*modalBtn.insertAdjacentHTML(
-      "afterend",
-      formErrorHTML +
-        "Erreur: Des erreurs sont présentes dans le formulaire, veuillez les corriger" +
-        "<br>" +
-        "</strong></div></div>"
-    );*/
+    document
+      .getElementById("signup-form")
+      .insertAdjacentHTML(
+        "afterend",
+        formErrorHTML +
+          "Erreur: Des erreurs sont présentes dans le formulaire, veuillez les corriger" +
+          "<br>" +
+          "</strong></div></div>"
+      );
     formBoolean = false; // Si des erreurs sont retournées alors on définit la variable comme fausse pour que le formulaire ne puisse pas être envoyé
   } else {
     // Construction de l'objet contenant les infos du client
