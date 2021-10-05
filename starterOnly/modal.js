@@ -253,6 +253,12 @@ formBody.insertAdjacentHTML(
 let successMessage = document.getElementById("success");
 successMessage.style.display = "none"; // On le cache par défaut
 
+function resetForm() {
+  formBody.reset();
+  successMessage.style.display = "none";
+  closeModal();
+}
+
 // Lorsque l'on clique sur le bouton de validation
 formSubmitButton.addEventListener("click", ($event) => {
   $event.preventDefault(); // On empêche le comportement par défaut
@@ -269,6 +275,6 @@ formSubmitButton.addEventListener("click", ($event) => {
     // Si oui on affiche le message de succès
     successMessage.style.display = "block";
     // Et on attend 2 secondes avant de fermer la modale
-    setTimeout(closeModal, 2000);
+    setTimeout(resetForm, 2000);
   }
 });
