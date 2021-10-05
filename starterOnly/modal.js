@@ -12,7 +12,9 @@ const modalbg = document.querySelector(".bground"); // Div d'arrière plan du fo
 const modalBtn = document.querySelectorAll(".modal-btn"); // Bouton "Je m'inscris"
 const formData = document.querySelectorAll(".formData"); // Formulaire
 const closeBtn = document.getElementById("close-button"); // Close modal button
+const formBody = document.getElementById("signup-form");
 
+let formSubmitButton = document.getElementById("button-signup-submit");
 let fnameId = document.getElementById("first");
 let lnameId = document.getElementById("last");
 let emailId = document.getElementById("email");
@@ -20,6 +22,8 @@ let birthId = document.getElementById("birthdate");
 let quantityId = document.getElementById("quantity");
 let radioBlockId = document.getElementById("localisation");
 let radioId = document.getElementsByName("location");
+let checkbox1Id = document.getElementById("checkbox1");
+let checkbox2Id = document.getElementById("checkbox2");
 
 // launch modal event
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
@@ -55,7 +59,7 @@ function closeModal() {
 function createErrorMessage(elementErrorId, name) {
   elementErrorId.insertAdjacentHTML(
     "afterend",
-    "<span id='" + name + "-error' class='error-text'><span>"
+    "<span id='" + name + "-error' class='error-text'></span>"
   );
 }
 
@@ -100,105 +104,171 @@ createErrorMessage(radioBlockId, "radio");
 let radioError = document.getElementById("radio-error");
 hideError(radioError);
 
-let formBoolean = false; // Variable booléenne permettant de valider le formulaire
+// Message d'erreur pour les conditions d'utilisation
+let checkbox1Error = document.getElementById("checkbox1-error");
+hideError(checkbox1Error);
 
-async function verifyForm() {
-  // Validation Email par expression régulière
-  function emailRegexValidation(email) {
-    const re =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
-  }
+// Validation Email par expression régulière
+function emailRegexValidation(email) {
+  const re =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
 
-  function nameRegexValidation(name) {
-    const re = [a - zA - Z];
-    return re.test(String(name));
-  }
+// Validation des noms par expression régulière
+function nameRegexValidation(name) {
+  const re = /[a-zA-Z]/;
+  return re.test(String(name));
+}
 
-  function validateFname() {
-    if (fnameId.value.length < 2) {
-      first_errMessage.textContent =
-        "Please enter 2+ characters for name field";
-      first_errMessage.style.display = "block";
+// Fonction permettant de valider le prénom
+function fnameValidation() {
+  // Si la valeur du champ est moins longue que deux caractères, on renvoie une erreur
+  if (fnameId.value.length < 2) {
+    fnameError.textContent = "Merci d'entrer au minimum deux caractères"; // Message d'erreur affiché
+    fnameError.style.display = "block"; // On affiche le bloc d'erreur
+    return false;
+  } else {
+    // Sinon, si la valeur du champ contient des chiffres ou caractères spéciaux, on renvoie une erreur
+    if (nameRegexValidation(fnameId.value) == false) {
+      fnameError.textContent = "Pas de chiffres ou de caractères spéciaux"; // Message d'erreur affiché
+      fnameError.style.display = "block"; // On affiche le bloc d'erreur
       return false;
+      // Sinon on valide le champ et on renvoie "true"
     } else {
-      first_errMessage.style.display = "none";
-      return true;
-    }
-  }
-
-  function validateLname() {
-    if (formLast.value.length < 2) {
-      last_errMessage.textContent = "Please enter 2+ characters for name field";
-      last_errMessage.style.display = "block";
-      return false;
-    } else {
-      last_errMessage.style.display = "none";
-      return true;
-    }
-  }
-
-  function validateEmail() {
-    if (!confirmEmail(formEmail.value)) {
-      email_errMessage.textContent = "You must enter a valid email";
-      email_errMessage.style.display = "block";
-      return false;
-    } else {
-      email_errMessage.style.display = "none";
-      return true;
-    }
-  }
-
-  function validateBirthdate() {
-    if (!formBirthdate.value) {
-      birthdate_errMessage.textContent = "You must enter your date of birth";
-      birthdate_errMessage.style.display = "block";
-      return false;
-    } else {
-      birthdate_errMessage.style.display = "none";
-      return true;
-    }
-  }
-
-  function validateQuantity() {
-    if (formQuantity.value < 0 || formQuantity.value === "") {
-      quantity_errMessage.textContent = "You must enter a valide value";
-      quantity_errMessage.style.display = "block";
-      return false;
-    } else {
-      quantity_errMessage.style.display = "none";
-      return true;
-    }
-  }
-
-  function validateLocation() {
-    let oneIsChecked = false;
-    for (let i = 0; i < formLocation.length; i++) {
-      if (formLocation[i].checked) {
-        oneIsChecked = true;
-        break;
-      }
-    }
-
-    if (!oneIsChecked) {
-      location_errMessage.textContent = "You must choose one option";
-      location_errMessage.style.display = "block";
-      return false;
-    } else {
-      location_errMessage.style.display = "none";
-      return true;
-    }
-  }
-
-  function validateCheckbox1() {
-    if (!formCheckbox1.checked) {
-      checkbox1_errMessage.textContent =
-        "You must check to agree to terms and conditions";
-      checkbox1_errMessage.style.display = "block";
-      return false;
-    } else {
-      checkbox1_errMessage.style.display = "none";
+      fnameError.style.display = "none"; // On cache le bloc d'erreur s'il n'y en a pas
       return true;
     }
   }
 }
+
+// Fonction permettant de valider le nom de famille : Même fonctionnement que la précédente
+function lnameValidation() {
+  if (lnameId.value.length < 2) {
+    lnameError.textContent = "Merci d'entrer au minimum deux caractères";
+    lnameError.style.display = "block";
+    return false;
+  } else {
+    if (nameRegexValidation(lnameId.value) == false) {
+      lnameError.textContent = "Pas de chiffres ou de caractères spéciaux";
+      lnameError.style.display = "block";
+      return false;
+    } else {
+      lnameError.style.display = "none";
+      return true;
+    }
+  }
+}
+
+// Fonction permettant de valider l'email. On utilise l'expression régulière pour vérifier les caractères
+function emailValidation() {
+  if (emailRegexValidation(emailId.value) == false) {
+    emailError.textContent = "Merci de saisir une adresse email valide";
+    emailError.style.display = "block";
+    return false;
+  } else {
+    emailError.style.display = "none";
+    return true;
+  }
+}
+
+// Fonction permettant de valider la date de naissance
+function birthdateValidation() {
+  // Si aucune valeur n'est entrée, alors on renvoie une erreur
+  if (!birthId.value) {
+    birthdateError.textContent = "Merci d'indiquer votre date de naissance";
+    birthdateError.style.display = "block";
+    return false;
+  } else {
+    // Sinon vrai
+    birthdateError.style.display = "none";
+    return true;
+  }
+}
+
+// Fonction pour vérifier le nombre de participations passées
+function quantityValidation() {
+  if (!quantityId.value) {
+    // Si aucune valeur n'est entrée, alors on demande de le faire
+    quantityError.textContent = "Veuillez entrer une valeur numérique valide";
+    quantityError.style.display = "block";
+    return false;
+  } else {
+    // Si la valeur est correcte, on valide
+    quantityError.style.display = "none";
+    return true;
+  }
+}
+
+// Fonction permettant de valider la localisation d'une précédente participation
+function locationValidation() {
+  let isLocationChecked = false; // Variable permettant de savoir si une localisation est déjà sélectionnée
+  if (quantityId.value > 0) {
+    // Si le nombre de participations passées est supérieur à 0, alors on demande dans quelle ville elle a eu lieu
+    for (let i = 0; i < radioId.length; i++) {
+      // On parcourt tous les choix de ville disponibles
+      if (radioId[i].checked) {
+        // Si un choix est sélectionné, alors on renvoie vrai
+        isLocationChecked = true;
+      }
+    }
+
+    if (isLocationChecked == false) {
+      // Si aucun choix n'est sélectionné, on affiche un message d'erreur
+      radioError.textContent =
+        "Merci d'indiquer dans quelle ville vous avez participé";
+      radioError.style.display = "block";
+      return false;
+    } else {
+      // Et sinon on cache le message d'erreur
+      radioError.style.display = "none";
+      return true;
+    }
+  } else {
+    // Si le nombre de participations est égal à 0 alors on ne demande pas de préciser la localisation
+    return true;
+  }
+}
+
+// Vérification de la validation des termes d'utilisation
+function checkboxValidation() {
+  // Si la boite n'est pas cochée, alors on envoie une erreur
+  if (!checkbox1Id.checked) {
+    checkbox1Error.textContent =
+      "Merci d'accepter les conditions d'utilisation";
+    checkbox1Error.style.display = "block";
+    return false; // Et on renvoie False
+  } else {
+    // Sinon on cache le message d'erreur
+    checkbox1Error.style.display = "none";
+    return true;
+  }
+}
+
+// Création d'un bloc pour le message de succès
+formBody.insertAdjacentHTML(
+  "afterend",
+  "<span id='success' class='success-text'>Formulaire validé !</span>"
+);
+let successMessage = document.getElementById("success");
+successMessage.style.display = "none"; // On le cache par défaut
+
+// Lorsque l'on clique sur le bouton de validation
+formSubmitButton.addEventListener("click", ($event) => {
+  $event.preventDefault(); // On empêche le comportement par défaut
+  // On vérifie que tous les champs soient validés
+  if (
+    fnameValidation() &&
+    lnameValidation() &&
+    emailValidation() &&
+    birthdateValidation() &&
+    quantityValidation() &&
+    locationValidation() &&
+    checkboxValidation()
+  ) {
+    // Si oui on affiche le message de succès
+    successMessage.style.display = "block";
+    // Et on attend 2 secondes avant de fermer la modale
+    setTimeout(closeModal, 2000);
+  }
+});
