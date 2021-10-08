@@ -545,6 +545,15 @@ footer {
   .hero-content {
     min-width: 100%;
   }
+
+  .topnav.responsive .icon {
+    position: absolute;
+    top: 1.5rem;
+  }
+
+  .main-navbar {
+    margin-top: 1.5rem;
+  }
 }
 
 @media screen and (max-width: 390px) {
@@ -578,11 +587,17 @@ footer {
   color: red;
 }
 
-.success-text {
+.success-title {
   margin-top: 0.5rem;
   font-size: 1.5rem;
   text-align: center;
   color: green;
+}
+
+.success-text {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  text-align: center;
 }
 
 /* Responsive */

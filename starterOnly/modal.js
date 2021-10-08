@@ -248,7 +248,7 @@ function checkboxValidation() {
 // Création d'un bloc pour le message de succès
 formBody.insertAdjacentHTML(
   "afterend",
-  "<span id='success' class='success-text'>Formulaire validé !</span>"
+  "<div id='success'><h2 class='success-title'>Formulaire validé !</h2> <p class='success-text'>Envoi des données au serveur</p></div>"
 );
 let successMessage = document.getElementById("success");
 successMessage.style.display = "none"; // On le cache par défaut
@@ -256,6 +256,7 @@ successMessage.style.display = "none"; // On le cache par défaut
 function resetForm() {
   formBody.reset();
   successMessage.style.display = "none";
+  formBody.style.display = "block";
   closeModal();
 }
 
@@ -274,6 +275,7 @@ formSubmitButton.addEventListener("click", ($event) => {
   ) {
     // Si oui on affiche le message de succès
     successMessage.style.display = "block";
+    formBody.style.display = "none";
     // Et on attend 2 secondes avant de fermer la modale
     setTimeout(resetForm, 2000);
   }
