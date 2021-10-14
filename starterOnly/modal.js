@@ -248,7 +248,7 @@ function checkboxValidation() {
 // Création d'un bloc pour le message de succès
 formBody.insertAdjacentHTML(
   "afterend",
-  "<div id='success'><h2 class='success-title'>Formulaire validé !</h2> <p class='success-text'>Envoi des données au serveur</p></div>"
+  "<div id='success' class='success-block'><h2 class='success-title'>Formulaire validé !</h2> <p class='success-text'>Merci d'avoir rempli le formulaire d'inscription</p><input class='btn-submit' type='submit' onclick='resetForm()' value='Fermer'/></div>"
 );
 let successMessage = document.getElementById("success");
 successMessage.style.display = "none"; // On le cache par défaut
@@ -263,20 +263,23 @@ function resetForm() {
 // Lorsque l'on clique sur le bouton de validation
 formSubmitButton.addEventListener("click", ($event) => {
   $event.preventDefault(); // On empêche le comportement par défaut
-  // On vérifie que tous les champs soient validés
-  if (
-    fnameValidation() &&
-    lnameValidation() &&
-    emailValidation() &&
-    birthdateValidation() &&
-    quantityValidation() &&
-    locationValidation() &&
-    checkboxValidation()
-  ) {
+  // On vérifie que tous les champs soient validés grâce à une variable
+  let formValidator =
+    fnameValidation() *
+    lnameValidation() *
+    emailValidation() *
+    birthdateValidation() *
+    quantityValidation() *
+    locationValidation() *
+    checkboxValidation();
+  console.log(formValidator);
+  if (formValidator == true) {
     // Si oui on affiche le message de succès
-    successMessage.style.display = "block";
-    formBody.style.display = "none";
-    // Et on attend 2 secondes avant de fermer la modale
-    setTimeout(resetForm, 2000);
+    successMessage.style.display = "flex";
+    formBody.style.display = "none"; // Affichage du bloc de succès avec le bouton fermer
+
+    // Si besoin, on peut utiliser un timer pour réinitialiser automatiquement le formulaire
+    // On attend 10 secondes avant de fermer la modale
+    setTimeout(resetForm, 10000);
   }
 });

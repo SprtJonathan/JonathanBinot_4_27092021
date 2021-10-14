@@ -587,16 +587,25 @@ footer {
   color: red;
 }
 
+#success {
+  display: flex;
+  flex-direction: column;
+  
+  justify-content: space-around;
+  align-items: center;
+  height: 70vh;
+}
+
 .success-title {
   margin-top: 0.5rem;
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   text-align: center;
   color: green;
 }
 
 .success-text {
   margin-top: 0.5rem;
-  font-size: 1rem;
+  font-size: 1.4rem;
   text-align: center;
 }
 
